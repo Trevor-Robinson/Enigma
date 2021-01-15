@@ -13,19 +13,20 @@ class Key
     @d_key = 00
   end
 
-  def randomize
+  def create_randomize
     @key = sprintf '%05i', rand(99999)
+    assign_shift_keys
   end
 
-  def assign_key(key)
+  def create_with_assigned_key(key)
     @key = key
+    assign_shift_keys
   end
 
-  def assign_subkeys
-    key_array = @key.split('')
-    @a_key = [key_array[0], key_array[1]].join.to_i
-    @b_key = [key_array[1], key_array[2]].join.to_i
-    @c_key = [key_array[2], key_array[3]].join.to_i
-    @d_key = [key_array[3], key_array[4]].join.to_i
+  def assign_shift_keys
+    @a_key = [@key[0], @key[1]].join.to_i
+    @b_key = [@key[1], @key[2]].join.to_i
+    @c_key = [@key[2], @key[3]].join.to_i
+    @d_key = [@key[3], @key[4]].join.to_i
   end
 end
