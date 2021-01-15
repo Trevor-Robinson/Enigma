@@ -13,4 +13,8 @@ class Key
     @d_key = 00
   end
 
+  def randomize
+    @random =rand(99999)
+  end
+
 end
