@@ -4,84 +4,55 @@ require './lib/offset'
 require 'pry'
 
 class Enigma
-  attr_reader :message,
+  attr_reader :decrypted_array,
+              :encrypted_array,
               :shifts,
               :characters
   def initialize
-    @message = ''
+    @decrypted_array = []
+    @encrypted_array = []
     @shifts = {}
     @characters = ("a".."z").to_a << " "
+    @shift_counters = {A: 0, B: 1, C: 2, D: 3}
   end
 
   def encrypt(message, key = "00000", date = "000000" )
-    @message = message
+    @decrypted_array = message.split('')
     get_shifts(key, date)
-    message_array = @message.split('')
-    a_counter = 0
-    b_counter = 1
-    c_counter = 2
-    d_counter = 3
-    encrypted = []
-    message_array.each do |letter|
-      if message_array.index(letter) == a_counter
-        message_array[a_counter] = 0
-          a_counter += 4
-        if @characters.index(letter) + @shifts[:A] <= 27
-          encrypted << @characters[@characters.index(letter) + @shifts[:A]]
-        elsif @characters.index(letter) + @shifts[:A] > 27 && @characters.index(letter) + @shifts[:A] <= 54
-          encrypted << @characters[@characters.index(letter) + @shifts[:A]- 27]
-        elsif @characters.index(letter) + @shifts[:A] > 54 && @characters.index(letter) + @shifts[:A] <= 81
-            encrypted << @characters[@characters.index(letter) + @shifts[:A] - (27*2)]
-        elsif @characters.index(letter) + @shifts[:A] > 81 && @characters.index(letter) + @shifts[:A] <= 108
-            encrypted << @characters[@characters.index(letter) + @shifts[:A] - (27*3)]
-        elsif @characters.index(letter) + @shifts[:A] < 108
-            encrypted << @characters[@characters.index(letter) + @shifts[:A] - (27*4)]
-        end
-      elsif message_array.index(letter) == b_counter
-        message_array[b_counter] = 0
-          b_counter += 4
-        if @characters.index(letter) + @shifts[:B] <= 27
-           encrypted << @characters[@characters.index(letter) + @shifts[:B]]
-        elsif @characters.index(letter) + @shifts[:B] > 27 && @characters.index(letter) + @shifts[:B] <= 54
-           encrypted << @characters[@characters.index(letter) + @shifts[:B]- 27]
-        elsif @characters.index(letter) + @shifts[:B] > 54 &&  @characters.index(letter) + @shifts[:B] <= 81
-             encrypted << @characters[@characters.index(letter) + @shifts[:B] - (27*2)]
-        elsif @characters.index(letter) + @shifts[:B] > 81 && @characters.index(letter) + @shifts[:B] <= 108
-            encrypted << @characters[@characters.index(letter) + @shifts[:B] - (27*3)]
-        elsif @characters.index(letter) + @shifts[:B] < 108
-            encrypted << @characters[@characters.index(letter) + @shifts[:B] - (27*4)]
-        end
-      elsif message_array.index(letter) == c_counter
-        message_array[c_counter] = 0
-          c_counter += 4
-        if @characters.index(letter) + @shifts[:C] <= 27
-           encrypted << @characters[@characters.index(letter) + @shifts[:C]]
-        elsif @characters.index(letter) + @shifts[:C] > 27 && @characters.index(letter) + @shifts[:C] <= 54
-           encrypted << @characters[@characters.index(letter) + @shifts[:C] - 27]
-        elsif @characters.index(letter) + @shifts[:C] > 54 && @characters.index(letter) + @shifts[:C] <= 81
-             encrypted << @characters[@characters.index(letter) + @shifts[:C] - (27*2)]
-        elsif @characters.index(letter) + @shifts[:C] > 81 && @characters.index(letter) + @shifts[:C] <= 108
-             encrypted << @characters[@characters.index(letter) + @shifts[:C] - (27*3)]
-        elsif @characters.index(letter) + @shifts[:C] < 108
-             encrypted << @characters[@characters.index(letter) + @shifts[:C] - (27*4)]
-        end
-      elsif message_array.index(letter) == d_counter
-        message_array[d_counter] = 0
-          d_counter += 4
-        if @characters.index(letter) + @shifts[:D] <= 27
-           encrypted << @characters[@characters.index(letter) + @shifts[:D]]
-        elsif @characters.index(letter) + @shifts[:D] > 27 && @characters.index(letter) + @shifts[:D] <= 54
-           encrypted << @characters[@characters.index(letter) + @shifts[:D] - 27]
-        elsif @characters.index(letter) + @shifts[:D] > 54 && @characters.index(letter) + @shifts[:D] <= 81
-             encrypted << @characters[@characters.index(letter) + @shifts[:D] - (27*2)]
-        elsif @characters.index(letter) + @shifts[:D] > 81 && @characters.index(letter) + @shifts[:D] <= 108
-             encrypted << @characters[@characters.index(letter) + @shifts[:D] - (27*3)]
-        elsif @characters.index(letter) + @shifts[:D] < 108
-             encrypted << @characters[@characters.index(letter) + @shifts[:D] - (27*4)]
-        end
+    shift_message
+    encrypted_return = {encryption: @encrypted_array.join, key: key, date: date}
+  end
+
+  def shift_message
+    @decrypted_array.each do |letter|
+        shift_helper(letter)
+    end
+  end
+
+  def shift_helper(letter)
+    @shift_counters.each do |shift, counter|
+      if @decrypted_array.index(letter) == counter
+        @decrypted_array[counter] = ''
+        @shift_counters[shift] += 4
+        shift_letter(letter, shift)
+        break
       end
     end
-    encrypted_return = {encryption: encrypted.join, key: key, date: date}
+  end
+
+  def shift_letter(letter, shift)
+    position = @characters.index(letter) + @shifts[shift]
+    if position <= 27
+      @encrypted_array << @characters[position]
+    elsif position <= 54
+      @encrypted_array << @characters[position - 27]
+    elsif position <= 81
+      @encrypted_array << @characters[position - (27*2)]
+    elsif position <= 108
+      @encrypted_array << @characters[position - (27*3)]
+    elsif position > 108
+      @encrypted_array << @characters[position - (27*4)]
+    end
   end
 
   def get_shifts(key, date)
