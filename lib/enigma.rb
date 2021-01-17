@@ -23,9 +23,33 @@ class Enigma
     encrypted_return = {encryption: @encrypted_array.join, key: key, date: date}
   end
 
+  def decrypt(ciphertext, key = "00000", date = "000000")
+    @encrypted_array = ciphertext.split('')
+    get_shifts(key, date)
+    unshift_message
+    decrypted_return = {decryption: @decrypted_array.join, key: key, date: date}
+  end
+
   def shift_message
     @decrypted_array.each do |letter|
         shift_helper(letter)
+    end
+  end
+
+  def unshift_message
+    @encrypted_array.each do |letter|
+        unshift_helper(letter)
+    end
+  end
+
+  def unshift_helper(letter)
+    @shift_counters.each do |shift, counter|
+      if @encrypted_array.index(letter) == counter
+        @encrypted_array[counter] = ''
+        @shift_counters[shift] += 4
+        unshift_letter(letter, shift)
+        break
+      end
     end
   end
 
@@ -42,17 +66,21 @@ class Enigma
 
   def shift_letter(letter, shift)
     position = @characters.index(letter) + @shifts[shift]
-    if position <= 27
-      @encrypted_array << @characters[position]
-    elsif position <= 54
-      @encrypted_array << @characters[position - 27]
-    elsif position <= 81
-      @encrypted_array << @characters[position - (27*2)]
-    elsif position <= 108
-      @encrypted_array << @characters[position - (27*3)]
-    elsif position > 108
-      @encrypted_array << @characters[position - (27*4)]
-    end
+    @encrypted_array << @characters[position] if position < 27
+    @encrypted_array << @characters[position - 27] if position.between?(28, 54)
+    @encrypted_array << @characters[position - (27*2)] if position.between?(55, 81)
+    @encrypted_array << @characters[position - (27*3)] if position.between?(82, 108)
+    @encrypted_array << @characters[position - (27*4)] if position > 108
+
+  end
+
+  def unshift_letter(letter, shift)
+    position = @characters.index(letter) - @shifts[shift]
+    @decrypted_array << @characters[position] if position > -27
+    @decrypted_array << @characters[position + 27] if position.between?(-54, -28)
+    @decrypted_array << @characters[position + (27*2)] if position.between?(-81, -55)
+    @decrypted_array << @characters[position + (27*3)] if position.between?(-108, -82)
+    @decrypted_array << @characters[position + (27*4)] if position < -108
   end
 
   def get_shifts(key, date)

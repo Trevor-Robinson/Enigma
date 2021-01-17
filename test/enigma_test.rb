@@ -13,10 +13,9 @@ class EnigmaTest < Minitest::Test
     assert_equal (["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]), enigma.characters
   end
 
-  def test_it_can_encypt
+  def test_it_can_encrypt
     enigma = Enigma.new
     assert_equal ({encryption: "keder ohulw", key: "02715", date: "040895"}), enigma.encrypt("hello world", "02715", "040895")
-
   end
 
   def test_it_can_get_shifts
@@ -31,17 +30,41 @@ class EnigmaTest < Minitest::Test
     assert_equal  ["k", "e", "d", "e", "r", " ", "o", "h", "u", "l", "w"], enigma.encrypted_array
   end
 
+  def test_it_can_unshift_message
+    enigma = Enigma.new
+    enigma.get_shifts("02715", "040895")
+    enigma.unshift_message
+    enigma.expects(:decrypted_array).returns( ["h", "e", "l", "l", "o", " ", "w", "o", "r", "l", "d"])
+    assert_equal ["h", "e", "l", "l", "o", " ", "w", "o", "r", "l", "d"], enigma.decrypted_array
+  end
+
   def test_it_can_shift_letter
     enigma = Enigma.new
     enigma.get_shifts("02715", "040895")
-    assert_equal ["k"], enigma.shift_letter('h', :A)
-    assert_equal ['k', ' '], enigma.shift_letter(' ', :B)
+    enigma.shift_letter('h', :A)
+    assert_equal ["k"], enigma.encrypted_array
+    enigma.shift_letter(' ', :B)
+    assert_equal ['k', ' '], enigma.encrypted_array
+  end
+
+  def test_it_can_unshift_letter
+    enigma = Enigma.new
+    enigma.get_shifts("02715", "040895")
+    enigma.unshift_letter('k', :A)
+    assert_equal ["h"], enigma.decrypted_array
+    enigma.unshift_letter(' ', :B)
+    assert_equal ['h', ' '], enigma.decrypted_array
   end
 
   def test_shift_helper
     enigma = Enigma.new
     enigma.get_shifts("02715", "040895")
     assert_equal ({:A=>0, :B=>1, :C=>2, :D=>3}), enigma.shift_helper("H")
+  end
+
+  def test_it_can_decrypt
+    enigma = Enigma.new
+    assert_equal ({decryption: "hello world", key: "02715", date: "040895"}), enigma.decrypt("keder ohulw", "02715", "040895")
   end
 
 end
