@@ -1,3 +1,4 @@
+require './test/test_helper'
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/key'
@@ -14,17 +15,16 @@ class KeyTest < Minitest::Test
     assert_equal 0, key.d_key
   end
 
-  def test_it_can_generate_random_number
+  def test_it_can_generate_random_key
     key = Key.new
-    key.expects(:randomize_key).returns('23574')
-    assert_equal '23574', key.randomize_key
+    key.expects(:random_key).returns('23574')
+    assert_equal '23574', key.random_key
   end
 
-  def test_random_number_is_always_5_digits
+  def test_random_key_is_always_5_digits
     key = Key.new
     100.times do |test|
-      key.randomize_key
-      assert_equal 5, key.randomize_key.length
+      assert_equal 5, key.random_key.length
     end
   end
 
@@ -40,6 +40,7 @@ class KeyTest < Minitest::Test
   def test_it_can_generate_shift_keys
     key = Key.new
     key.create_with_key('03574')
+    key.assign_shift_keys
     assert_equal 3, key.a_key
     assert_equal 35, key.b_key
     assert_equal 57, key.c_key

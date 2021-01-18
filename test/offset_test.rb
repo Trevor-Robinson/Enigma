@@ -1,3 +1,4 @@
+require './test/test_helper'
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/offset'
@@ -17,12 +18,13 @@ class OffsetTest < Minitest::Test
 
   def test_it_can_create_with_new_date
     offset = Offset.new
-    offset.expects(:today_date).returns('030220')
-    assert_equal '030220', offset.today_date
+    assert_equal 6, offset.today_date.length
+    assert_instance_of String, offset.today_date
   end
 
   def test_it_can_create_with_assigned_date
     offset = Offset.new
+    offset.create_with_assigned_date('000000')
     offset.create_with_assigned_date('030220')
     assert_equal '030220', offset.date
   end
