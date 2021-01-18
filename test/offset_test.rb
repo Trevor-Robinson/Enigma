@@ -17,15 +17,19 @@ class OffsetTest < Minitest::Test
 
   def test_it_can_create_with_new_date
     offset = Offset.new
-    offset.create_with_new_date
-    offset.expects(:date).returns('030220')
-    assert_equal '030220', offset.date
+    offset.expects(:today_date).returns('030220')
+    assert_equal '030220', offset.today_date
   end
 
   def test_it_can_create_with_assigned_date
     offset = Offset.new
     offset.create_with_assigned_date('030220')
     assert_equal '030220', offset.date
+  end
+
+  def test_it_can_check_valid_date
+    offset = Offset.new
+    assert_equal true, offset.check_valid_date('030220')
   end
 
   def test_it_can_calculate_offset
@@ -37,6 +41,7 @@ class OffsetTest < Minitest::Test
   def test_it_can_assign_shift_offsets
     offset = Offset.new
     offset.create_with_assigned_date('040895')
+    offset.assign_offsets
     assert_equal 1, offset.a_offset
     assert_equal 0, offset.b_offset
     assert_equal 2, offset.c_offset
