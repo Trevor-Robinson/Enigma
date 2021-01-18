@@ -1,3 +1,4 @@
+
 class Offset
   attr_reader :date,
               :offset,
@@ -15,16 +16,24 @@ class Offset
     @d_offset = 0
   end
 
-  def create_with_new_date
-    @date = Date.today.strftime("%d%m%y")
+  def today_date
+    Date.today.strftime("%d%m%y")
+  end
+
+  def create_with_assigned_date(date)
+    if check_valid_date(date)
+      @date = date
+    else
+      @date = today_date
+    end
     @offset = calculate_offset
     assign_offsets
   end
 
-  def create_with_assigned_date(date)
-    @date = date
-    @offset = calculate_offset
-    assign_offsets
+  def check_valid_date(date)
+    return false if !date.is_a?(String) || date.length != 6 || date == "000000"
+      date_format = "%d%m%y"
+      Date.strptime(date, date_format).strftime("%d%m%y") == date
   end
 
   def calculate_offset
