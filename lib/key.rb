@@ -13,7 +13,7 @@ class Key
     @d_key = 00
   end
 
-  def randomize_key
+  def random_key
     sprintf '%05i', rand(99999)
   end
 
@@ -25,7 +25,7 @@ class Key
     if check_valid_key(key)
       @key = (key)
     else
-      @key = randomize_key
+      @key = random_key
     end
     assign_shift_keys
   end
