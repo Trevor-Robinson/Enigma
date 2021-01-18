@@ -7,32 +7,40 @@ class Enigma
   attr_reader :decrypted_array,
               :encrypted_array,
               :shifts,
-              :characters
+              :characters,
+              :key
   def initialize
     @decrypted_array = []
     @encrypted_array = []
+    @key = Key.new
+    @offset = Offset.new
     @shifts = {}
     @characters = ("a".."z").to_a << " "
     @shift_counters = {A: 0, B: 1, C: 2, D: 3}
   end
 
   def encrypt(message, key = "00000", date = "000000" )
-    @decrypted_array = message.split('')
-    get_shifts(key, date)
+
+    @decrypted_array = message.downcase.split('')
+    @key.create_with_key(key)
+    @offset.create_with_assigned_date(date)
+    get_shifts
     shift_message
-    encrypted_return = {encryption: @encrypted_array.join, key: key, date: date}
+    {encryption: @encrypted_array.join, key: @key.key , date: @offset.date}
   end
 
   def decrypt(ciphertext, key = "00000", date = "000000")
     @encrypted_array = ciphertext.split('')
-    get_shifts(key, date)
+    @key.create_with_key(key)
+    @offset.create_with_assigned_date(date)
+    get_shifts
     unshift_message
-    decrypted_return = {decryption: @decrypted_array.join, key: key, date: date}
+    {decryption: @decrypted_array.join, key: @key.key, date: @offset.date}
   end
 
   def shift_message
     @decrypted_array.each do |letter|
-        shift_helper(letter)
+      shift_helper(letter)
     end
   end
 
@@ -66,8 +74,8 @@ class Enigma
 
   def shift_letter(letter, shift)
     position = @characters.index(letter) + @shifts[shift]
-    @encrypted_array << @characters[position] if position < 27
-    @encrypted_array << @characters[position - 27] if position.between?(28, 54)
+    @encrypted_array << @characters[position] if position <= 26
+    @encrypted_array << @characters[position - 27] if position.between?(27, 54)
     @encrypted_array << @characters[position - (27*2)] if position.between?(55, 81)
     @encrypted_array << @characters[position - (27*3)] if position.between?(82, 108)
     @encrypted_array << @characters[position - (27*4)] if position > 108
@@ -76,19 +84,15 @@ class Enigma
 
   def unshift_letter(letter, shift)
     position = @characters.index(letter) - @shifts[shift]
-    @decrypted_array << @characters[position] if position > -27
-    @decrypted_array << @characters[position + 27] if position.between?(-54, -28)
+    @decrypted_array << @characters[position] if position >= -26
+    @decrypted_array << @characters[position + 27] if position.between?(-54, -27)
     @decrypted_array << @characters[position + (27*2)] if position.between?(-81, -55)
     @decrypted_array << @characters[position + (27*3)] if position.between?(-108, -82)
     @decrypted_array << @characters[position + (27*4)] if position < -108
   end
 
-  def get_shifts(key, date)
-    shift_key = Key.new
-    shift_offset = Offset.new
-    shift_key.create_with_assigned_key(key)
-    shift_offset.create_with_assigned_date(date)
-    shifts = Shifts.new(shift_key, shift_offset)
+  def get_shifts
+    shifts = Shifts.new(@key, @offset)
     shifts.shifts_with_inputs
     @shifts = shifts.shifts
   end
