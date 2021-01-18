@@ -13,13 +13,20 @@ class Key
     @d_key = 00
   end
 
-  def create_randomize
-    @key = sprintf '%05i', rand(99999)
-    assign_shift_keys
+  def randomize_key
+    sprintf '%05i', rand(99999)
   end
 
-  def create_with_assigned_key(key)
-    @key = key
+  def check_valid_key(key)
+    key.is_a?(String) && key.length == 5 && key != "00000"
+  end
+
+  def create_with_key(key)
+    if check_valid_key(key)
+      @key = (key)
+    else
+      @key = randomize_key
+    end
     assign_shift_keys
   end
 
