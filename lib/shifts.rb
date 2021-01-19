@@ -24,10 +24,10 @@ class Shifts
   def calculate_simple_shifts
     @shifts.each do |letter, amount|
       simplified = amount
-       until simplified < 27
+      until simplified < 27
          simplified -= 27
-       end
-       @simple_shifts[letter] = simplified
+      end
+      @simple_shifts[letter] = simplified
     end
   end
 end

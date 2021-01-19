@@ -32,8 +32,8 @@ class Offset
 
   def check_valid_date(date)
     return false if !date.is_a?(String) || date.length != 6 || date == '000000'
-      date_format = '%d%m%y'
-      Date.strptime(date, date_format).strftime('%d%m%y') == date
+    date_format = '%d%m%y'
+    Date.strptime(date, date_format).strftime('%d%m%y') == date
   end
 
   def calculate_offset

@@ -41,8 +41,8 @@ class Enigma
   end
 
   def cleanse_input(input)
-     input_array = input.downcase.split('')
-     input_array.delete('\n')
+    input_array = input.downcase.split('')
+    input_array.delete('\n')
     input_array
   end
 
