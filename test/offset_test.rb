@@ -8,8 +8,8 @@ class OffsetTest < Minitest::Test
   def test_it_exists_and_has_attributes
     offset = Offset.new
     assert_instance_of Offset, offset
-    assert_equal "000000", offset.date
-    assert_equal "0000", offset.offset
+    assert_equal '000000', offset.date
+    assert_equal '0000', offset.offset
     assert_equal 0, offset.a_offset
     assert_equal 0, offset.b_offset
     assert_equal 0, offset.c_offset
@@ -37,7 +37,7 @@ class OffsetTest < Minitest::Test
   def test_it_can_calculate_offset
     offset = Offset.new
     offset.create_with_assigned_date('040895')
-    assert_equal "1025", offset.offset
+    assert_equal '1025', offset.offset
   end
 
   def test_it_can_assign_shift_offsets

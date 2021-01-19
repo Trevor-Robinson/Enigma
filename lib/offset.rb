@@ -8,8 +8,8 @@ class Offset
               :d_offset
 
   def initialize
-    @date = "000000"
-    @offset = "0000"
+    @date = '000000'
+    @offset = '0000'
     @a_offset = 0
     @b_offset = 0
     @c_offset = 0
@@ -17,7 +17,7 @@ class Offset
   end
 
   def today_date
-    Date.today.strftime("%d%m%y")
+    Date.today.strftime('%d%m%y')
   end
 
   def create_with_assigned_date(date)
@@ -31,9 +31,9 @@ class Offset
   end
 
   def check_valid_date(date)
-    return false if !date.is_a?(String) || date.length != 6 || date == "000000"
-      date_format = "%d%m%y"
-      Date.strptime(date, date_format).strftime("%d%m%y") == date
+    return false if !date.is_a?(String) || date.length != 6 || date == '000000'
+    date_format = '%d%m%y'
+    Date.strptime(date, date_format).strftime('%d%m%y') == date
   end
 
   def calculate_offset

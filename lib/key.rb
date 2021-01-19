@@ -6,7 +6,7 @@ class Key
               :d_key
 
   def initialize
-    @key = "00000"
+    @key = '00000'
     @a_key = 00
     @b_key = 00
     @c_key = 00
@@ -18,7 +18,7 @@ class Key
   end
 
   def check_valid_key(key)
-    key.is_a?(String) && key.length == 5 && key != "00000"
+    key.is_a?(String) && key.length == 5 && key != '00000'
   end
 
   def create_with_key(key)
