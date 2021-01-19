@@ -13,12 +13,8 @@ class EnigmaTest < Minitest::Test
     assert_instance_of Enigma, enigma
     assert_instance_of Key, enigma.key
     assert_instance_of Offset, enigma.offset
-    assert_equal [], enigma.input_array
-    assert_equal [], enigma.output_array
-    assert_equal ({}), enigma.shifts
     assert_equal (["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]), enigma.characters
     assert_equal ({A: 0, B: 1, C: 2, D: 3}), enigma.shift_counters
-    assert_equal '', enigma.e_or_d
   end
 
   def test_it_can_encrypt
@@ -79,5 +75,10 @@ class EnigmaTest < Minitest::Test
     enigma2 = Enigma.new
     enigma.decrypt("keder ohulw", "02715", "040895")
     assert_equal 3, enigma.get_index('w', :C)
+  end
+
+  def test_it_can_cleanse_inputs
+    enigma = Enigma.new
+    assert_equal ['h', 'e', 'l', 'l', 'o'] , enigma.cleanse_input('!Hello!')
   end
 end

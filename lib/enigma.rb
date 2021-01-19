@@ -11,30 +11,39 @@ class Enigma
               :key,
               :offset,
               :shift_counters,
-              :e_or_d
+              :e_or_d,
+              :output_hash
   def initialize
-    @input_array = []
-    @output_array = []
     @key = Key.new
     @offset = Offset.new
-    @shifts = {}
     @characters = ("a".."z").to_a << " "
     @shift_counters = {A: 0, B: 1, C: 2, D: 3}
-    @e_or_d = ""
   end
 
   def encrypt(message, key = "00000", date = "000000" )
-    @input_array = message.downcase.split('')
+    @output_array = []
+    @input_array = []
+    @input_array = cleanse_input(message)
     @e_or_d = 'e'
     shift_message(key, date)
-    {encryption: @output_array.join, key: @key.key , date: @offset.date}
+    @output_hash = {encryption: @output_array.join, key: @key.key , date: @offset.date}
   end
 
   def decrypt(ciphertext, key = "00000", date = "000000")
+    @output_array = []
+    @input_array = []
     @input_array = ciphertext.split('')
     @e_or_d = 'd'
     shift_message(key, date)
-    {decryption: @output_array.join, key: @key.key, date: @offset.date}
+    @output_hash = {decryption: @output_array.join, key: @key.key, date: @offset.date}
+  end
+
+  def cleanse_input(input)
+     input_array = input.downcase.split('')
+     input_array.delete("\n")
+     input_array.each do |character|
+      input_array.delete(character) if !@characters.include?(character)
+    end
   end
 
   def shift_message(key, date)
