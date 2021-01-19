@@ -8,7 +8,7 @@ class KeyTest < Minitest::Test
   def test_it_exists_and_has_attributes
     key = Key.new
     assert_instance_of Key, key
-    assert_equal "00000", key.key
+    assert_equal '00000', key.key
     assert_equal 0, key.a_key
     assert_equal 0, key.b_key
     assert_equal 0, key.c_key

@@ -16,11 +16,11 @@ class Enigma
   def initialize
     @key = Key.new
     @offset = Offset.new
-    @characters = ("a".."z").to_a << " "
+    @characters = ('a'..'z').to_a << ' '
     @shift_counters = {A: 0, B: 1, C: 2, D: 3}
   end
 
-  def encrypt(message, key = "00000", date = "000000" )
+  def encrypt(message, key = '00000', date = '000000' )
     @output_array = []
     @input_array = []
     @input_array = cleanse_input(message)
@@ -30,7 +30,7 @@ class Enigma
     @output_hash = {encryption: @output_array.join, key: @key.key , date: @offset.date}
   end
 
-  def decrypt(ciphertext, key = "00000", date = "000000")
+  def decrypt(ciphertext, key = '00000', date = '000000')
     @output_array = []
     @input_array = []
     @input_array = ciphertext.split('')
@@ -42,7 +42,7 @@ class Enigma
 
   def cleanse_input(input)
      input_array = input.downcase.split('')
-     input_array.delete("\n")
+     input_array.delete('\n')
     input_array
   end
 
