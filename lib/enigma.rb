@@ -41,20 +41,22 @@ class Enigma
   def cleanse_input(input)
      input_array = input.downcase.split('')
      input_array.delete("\n")
-     input_array.each do |character|
-      input_array.delete(character) if !@characters.include?(character)
-    end
+    input_array
   end
 
   def shift_message(key, date)
     set_shifts(key, date)
     @input_array.each do |letter|
-      @shift_counters.each do |shift, counter|
-        if @input_array.index(letter) == counter
-          @input_array[counter] = ''
-          @shift_counters[shift] += 4
-          shift_letter(letter, shift)
-          break
+      if !@characters.include?(letter)
+        @output_array << letter
+      else
+        @shift_counters.each do |shift, counter|
+          if @input_array.index(letter) == counter
+            @input_array[counter] = ''
+            @shift_counters[shift] += 4
+            shift_letter(letter, shift)
+            break
+          end
         end
       end
     end
