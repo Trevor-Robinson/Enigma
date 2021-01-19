@@ -25,6 +25,7 @@ class Enigma
     @input_array = []
     @input_array = cleanse_input(message)
     @e_or_d = 'e'
+    set_shifts(key, date)
     shift_message(key, date)
     @output_hash = {encryption: @output_array.join, key: @key.key , date: @offset.date}
   end
@@ -34,6 +35,7 @@ class Enigma
     @input_array = []
     @input_array = ciphertext.split('')
     @e_or_d = 'd'
+    set_shifts(key, date)
     shift_message(key, date)
     @output_hash = {decryption: @output_array.join, key: @key.key, date: @offset.date}
   end
@@ -45,7 +47,6 @@ class Enigma
   end
 
   def shift_message(key, date)
-    set_shifts(key, date)
     @input_array.each do |letter|
       if !@characters.include?(letter)
         @output_array << letter

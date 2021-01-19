@@ -79,6 +79,6 @@ class EnigmaTest < Minitest::Test
 
   def test_it_can_cleanse_inputs
     enigma = Enigma.new
-    assert_equal ['h', 'e', 'l', 'l', 'o'] , enigma.cleanse_input('!Hello')
+    assert_equal ['h', 'e', 'l', 'l', 'o'] , enigma.cleanse_input('Hello')
   end
 end
